@@ -1,0 +1,33 @@
+{
+  "name": "gui-now",
+  "displayName": "GUI",
+  "version": "1.0.0",
+  "description": "Turn HTML, Markdown or Mermaid into a live shareable URL. Bundles the gui-now skill and the gui-now-mcp server.",
+  "author": {
+    "name": "GUI",
+    "url": "https://gui.now"
+  },
+  "homepage": "https://gui.now",
+  "repository": "https://github.com/gui-now/skills",
+  "license": "MIT",
+  "keywords": ["html", "markdown", "mermaid", "share", "canvas", "mcp"],
+  "skills": ["./"],
+  "mcpServers": {
+    "gui-now": {
+      "command": "npx",
+      "args": ["-y", "gui-now-mcp"],
+      "env": {
+        "GUI_NOW_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "GUI Pro API key",
+      "description": "Optional. Leave empty to use the free tier.",
+      "sensitive": true,
+      "default": ""
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "gui-now",
+  "description": "GUI: turn HTML, Markdown or Mermaid into a live shareable URL.",
+  "owner": {
+    "name": "GUI",
+    "url": "https://gui.now"
+  },
+  "plugins": [
+    {
+      "name": "gui-now",
+      "source": "./",
+      "description": "The gui-now skill plus the gui-now-mcp server, so Claude can publish pages to gui.now and share the link."
+    }
+  ]
+}
