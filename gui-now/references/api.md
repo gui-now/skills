@@ -94,16 +94,14 @@ await gui.update(canvas.id, canvas.edit_token, { html: '<h1>v2</h1>' })
 pip install gui-now
 ```
 ```python
-import gui_now
+from guinow import GuiNowClient
 
-# Free
-canvas = gui_now.create("<h1>Hello</h1>", title="My Canvas")
-
-# Pro
-canvas = gui_now.create("<h1>Hello</h1>", api_key="PRO_KEY", expires="7d")
-
+# Free tier. For Pro: GuiNowClient(api_key="PRO_KEY"), or set GUI_NOW_API_KEY.
+client = GuiNowClient()
+canvas = client.create(html="<h1>Hello</h1>", title="My Canvas")
 print(canvas.url)
-gui_now.update(canvas.id, "<h1>v2</h1>", canvas.edit_token)
+
+client.update(canvas.id, canvas.edit_token, html="<h1>Updated</h1>")
 ```
 
 ### cURL
