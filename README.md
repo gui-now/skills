@@ -11,7 +11,29 @@ directory, or clone the whole repo in place.
 
 ## Install
 
-**Claude Code** — project-scoped:
+**Claude Code plugin** (the skill plus the gui-now MCP server), in Claude Code:
+
+```
+/plugin install gui-now --marketplace gui-now/skills
+```
+
+On Claude Code before 2.1.275, add the marketplace first:
+
+```
+/plugin marketplace add gui-now/skills
+/plugin install gui-now@gui-now
+```
+
+The plugin asks for an optional Pro API key when it's enabled. Leave it empty
+for the free tier.
+
+**Any agent that supports skills** (Claude Code, Cursor, Codex and others):
+
+```bash
+npx skills add gui-now/skills --skill gui-now -g
+```
+
+**Claude Code, skill only** — project-scoped:
 
 ```bash
 mkdir -p .claude/skills
