@@ -74,7 +74,7 @@ The `html` field is the default view. Each frame appears as a tab in the viewer.
 
 ```json
 {
-  "html": "<gui-grid columns='2'><gui-card title='Revenue' value='$12,450' change='+8.2%'></gui-card><gui-chart type='bar' data='[{\"label\":\"Q1\",\"value\":42}]'></gui-chart></gui-grid>",
+  "html": "<gui-grid cols='2'><gui-card title='Revenue' value='$12,450' change='+8.2%'></gui-card><gui-chart type='bar' data='[{\"label\":\"Q1\",\"value\":42}]'></gui-chart></gui-grid>",
   "title": "Dashboard"
 }
 ```
