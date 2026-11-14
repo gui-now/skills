@@ -1,54 +1,58 @@
 # gui.now Component Library
 
-Auto-injected into every canvas. No script tags or imports needed — just use the HTML tags.
+`gui-components.js` is injected into every canvas, free or Pro. No script tags or imports needed: just use the HTML tags below. There are 8 tags, and every one of them works without a Pro key.
+
+JSON attributes (`data`, `rows`, `columns`, `events`, `fields`) must be valid JSON inside single quotes. Escape a `'` inside them as `&#39;`.
 
 ## Charts
 
 ```html
-<!-- Bar chart -->
-<gui-chart type="bar" data='[
+<!-- Bar chart (the default type) -->
+<gui-chart type="bar" title="Signups" data='[
   {"label": "Jan", "value": 120},
   {"label": "Feb", "value": 180},
   {"label": "Mar", "value": 95}
 ]'></gui-chart>
 
-<!-- Line chart -->
-<gui-chart type="line" data='[
+<!-- Line chart: give it at least two points -->
+<gui-chart type="line" title="Daily active users" data='[
   {"label": "Mon", "value": 42},
   {"label": "Tue", "value": 58},
   {"label": "Wed", "value": 35}
 ]'></gui-chart>
 
-<!-- Pie chart (Pro) -->
-<gui-chart type="pie" data='[
+<!-- Pie chart -->
+<gui-chart type="pie" title="Browsers" data='[
   {"label": "Chrome", "value": 65},
   {"label": "Safari", "value": 19},
   {"label": "Firefox", "value": 16}
 ]'></gui-chart>
-
-<!-- Radar chart (Pro) -->
-<gui-chart type="radar" data='[
-  {"label": "Speed", "value": 80},
-  {"label": "Power", "value": 65},
-  {"label": "Range", "value": 90}
-]'></gui-chart>
 ```
 
-Attributes: `type` (bar, line, pie*, radar*), `data` (JSON array of {label, value}).
+Attributes: `type` (`bar`, `line` or `pie`), `data` (JSON array of `{"label", "value"}` with numeric values), `title`, `height` (plot height in px), `color` (bar and line color, any CSS color).
 
-*Pro only.
+There is no radar or heatmap chart type. For anything else, draw your own SVG or canvas in the page.
 
 ## Tables
 
 ```html
-<gui-table data='[
+<gui-table sortable title="Team" columns='["name", "role", "status"]' rows='[
   {"name": "Alice", "role": "Engineer", "status": "Active"},
   {"name": "Bob", "role": "PM", "status": "Away"},
   {"name": "Carol", "role": "Designer", "status": "Active"}
 ]'></gui-table>
+
+<!-- Custom header text -->
+<gui-table columns='[
+  {"key": "name", "label": "Name"},
+  {"key": "mrr", "label": "MRR ($)"}
+]' rows='[
+  {"name": "Acme", "mrr": 4200},
+  {"name": "Globex", "mrr": 1800}
+]'></gui-table>
 ```
 
-Auto-generates headers from keys. Sortable columns.
+Attributes: `columns` (JSON array of row keys, or `{"key", "label"}` objects for custom header text), `rows` (JSON array of objects keyed by those keys), `title`, `sortable` (click a header to sort), `striped`.
 
 ## Cards / Stats
 
@@ -58,7 +62,7 @@ Auto-generates headers from keys. Sortable columns.
 <gui-card title="Uptime" value="99.9%"></gui-card>
 ```
 
-Attributes: `title`, `value`, `change` (optional, shows green for + and red for -).
+Attributes: `title`, `value`, `change` (optional; start it with `+` or `-` to show it rising or falling), `icon` (optional short text or emoji).
 
 ## Code Blocks
 
@@ -70,68 +74,73 @@ def fibonacci(n):
     return fibonacci(n-1) + fibonacci(n-2)
 </gui-code>
 
-<gui-code language="javascript">
-const greet = (name) => `Hello, ${name}!`
+<gui-code language="html" title="index.html">
+&lt;h1&gt;Hello&lt;/h1&gt;
 </gui-code>
 ```
 
-Syntax highlighting included. Supports: javascript, typescript, python, rust, go, bash, json, html, css, sql, and more.
+Attributes: `language` (shown as the block's label), `title` (label override). Don't use `lang` for the code language: it's the HTML attribute for the text's spoken language, and the component moves it to `language`. The code is the tag's text. The browser parses the tag's contents first, so write `<` as `&lt;` and `&` as `&amp;` when showing HTML or XML.
 
 ## Kanban Boards
 
 ```html
-<gui-kanban columns='[
-  {"title": "Backlog", "items": ["Research API", "Write docs"]},
-  {"title": "In Progress", "items": ["Build auth"]},
-  {"title": "Done", "items": ["Setup CI", "Deploy staging"]}
+<gui-kanban title="Sprint" columns='[
+  {"title": "Backlog", "items": [{"title": "Research API"}, {"title": "Write docs", "tag": "docs"}]},
+  {"title": "In Progress", "items": [{"title": "Build auth", "description": "Email links first"}]},
+  {"title": "Done", "items": [{"title": "Set up CI"}, {"title": "Deploy staging"}]}
 ]'></gui-kanban>
 ```
+
+Attributes: `columns` (JSON array of `{"title", "items"}`), `title`. Each item is an object with `title` and optional `description` and `tag`, not a plain string.
 
 ## Timelines
 
 ```html
-<gui-timeline data='[
-  {"date": "Mar 1", "title": "Kickoff", "description": "Project started"},
-  {"date": "Mar 15", "title": "Alpha", "description": "Internal testing"},
-  {"date": "Apr 1", "title": "Launch", "description": "Public release"}
+<gui-timeline title="Launch plan" events='[
+  {"time": "Mar 1", "title": "Kickoff", "description": "Project started"},
+  {"time": "Mar 15", "title": "Alpha", "description": "Internal testing"},
+  {"time": "Apr 1", "title": "Launch", "description": "Public release"}
 ]'></gui-timeline>
 ```
+
+Attributes: `events` (JSON array of `{"title", "description", "time"}`; `description` and `time` are optional), `title`, `color` (dot color).
 
 ## Forms
 
 ```html
-<gui-form fields='[
-  {"name": "name", "type": "text", "label": "Full Name", "placeholder": "John Doe"},
+<gui-form title="Sign up" submit="Join" fields='[
+  {"name": "name", "type": "text", "label": "Full name", "placeholder": "Jane Doe"},
   {"name": "email", "type": "email", "label": "Email"},
   {"name": "role", "type": "select", "label": "Role", "options": ["Engineer", "Designer", "PM"]},
-  {"name": "subscribe", "type": "checkbox", "label": "Subscribe to updates"}
+  {"name": "notes", "type": "textarea", "label": "Notes"}
 ]'></gui-form>
 ```
 
-Field types: text, email, number, select, checkbox, textarea, range, date, color.
+Attributes: `fields` (JSON array of `{"name", "label", "type", "placeholder", "options"}`), `title`, `submit` (button text, default "Submit"), `action` (URL to send submissions to).
 
-All form inputs sync across viewers in real-time.
+Field types: `select` (with `options`), `textarea`, or any HTML input type (`text`, `email`, `number`, `date`, `color`, `range` and so on). gui.now doesn't store submissions; set `action` to your own endpoint if you need them. Every field syncs across viewers as they type, like any other input on the page.
 
 ## Grid Layout
 
 ```html
-<gui-grid columns="3">
+<gui-grid cols="2">
   <gui-card title="Users" value="1,247"></gui-card>
   <gui-card title="Revenue" value="$8.4K"></gui-card>
   <gui-card title="Growth" value="+23%"></gui-card>
+  <gui-card title="Churn" value="1.8%"></gui-card>
 </gui-grid>
 
-<gui-grid columns="2">
-  <gui-chart type="bar" data='[...]'></gui-chart>
-  <gui-table data='[...]'></gui-table>
+<gui-grid cols="2" gap="24">
+  <gui-chart type="bar" data='[{"label": "Q1", "value": 42}, {"label": "Q2", "value": 58}]'></gui-chart>
+  <gui-table columns='["region", "sales"]' rows='[{"region": "EU", "sales": 120}, {"region": "US", "sales": 180}]'></gui-table>
 </gui-grid>
 ```
 
-Attributes: `columns` (1-4). Responsive — stacks on mobile.
+Attributes: `cols` (number of columns, default 2), `gap` (px, default 16). The grid keeps its column count at every screen width, and a `gui-card` is about 200px wide at minimum, so two cards side by side need about 450px and scroll sideways on a phone. For pages people will open on a phone, use `cols="2"` at most, and `cols="1"` for cards.
 
 ## Input Sync
 
-Standard HTML form elements sync across all viewers automatically — no setup:
+Standard HTML form elements sync across all viewers automatically, no setup:
 
 ```html
 <input type="text" name="search" placeholder="Search...">
@@ -143,15 +152,4 @@ Standard HTML form elements sync across all viewers automatically — no setup:
 <textarea name="notes" placeholder="Shared notes..."></textarea>
 ```
 
-Use `name` attributes for sync to work. Every viewer sees the same values updating live.
-
-## Pro Components
-
-These require a Pro API key (`x-api-key` header):
-- `<gui-chart type="pie">` — pie charts
-- `<gui-chart type="radar">` — radar/spider charts
-- `<gui-chart type="heatmap">` — heatmaps (Pro)
-- `<gui-list>` — styled lists (Pro)
-- `<gui-stat>` — enhanced stat cards (Pro)
-
-Free tier agents: if a user requests these, mention Pro — https://gui.now/pro
+Give each input a `name` or `id` so it syncs reliably. Every viewer sees the same values updating live.
