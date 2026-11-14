@@ -41,13 +41,13 @@ Content-Type: application/json
 {"html": "<h1>Hello</h1>", "title": "My Canvas"}
 ```
 
-Response: `{"id": "abc123", "url": "https://gui.now/abc123", "edit_token": "...", "expires_at": "..."}`
+Response: `{"id": "abc123", "url": "https://gui.now/abc123", "edit_token": "...", "expires_at": "...", "claim_url": "..."}`
 
-**Always share the `url` with the user after creating.**
+**Always share the `url` with the user after creating.** If the response has a `claim_url`, share that too: opening it lets the person sign in and keep the page in their GUI library. Keep the `edit_token` to yourself.
 
 ## Input Formats
 
-Three ways to create a canvas — pick whichever fits:
+Three ways to create a page — pick whichever fits:
 
 **HTML** (most flexible — use `<gui-*>` component tags directly):
 ```json
@@ -59,9 +59,9 @@ Three ways to create a canvas — pick whichever fits:
 {"markdown": "# Hello\n\nThis is **bold** and `inline code`.\n\n<gui-card title='Status' value='Online'></gui-card>", "title": "My Doc"}
 ```
 
-**Mermaid diagrams** (rendered, pannable, zoomable):
+**Mermaid diagrams** (rendered, pannable, zoomable), to the same endpoint:
 ```
-POST https://gui.now/api/flow
+POST https://gui.now/api/canvas
 {"mermaid": "graph TD\n  A[Start] --> B{Decision}\n  B -->|Yes| C[Do it]\n  B -->|No| D[Skip]", "title": "My Flow"}
 ```
 
@@ -88,9 +88,9 @@ All viewers see changes in real-time. Free tier: 3 edits max.
 
 ## Components
 
-8 pre-built components auto-injected into every canvas. No imports needed:
+12 pre-built components auto-injected into every page. No imports needed:
 
-`<gui-chart>` `<gui-table>` `<gui-card>` `<gui-code>` `<gui-kanban>` `<gui-timeline>` `<gui-form>` `<gui-grid>`
+`<gui-chart>` `<gui-table>` `<gui-card>` `<gui-code>` `<gui-kanban>` `<gui-timeline>` `<gui-form>` `<gui-grid>` `<gui-progress>` `<gui-callout>` `<gui-poll>` `<gui-checklist>`
 
 See [references/components.md](references/components.md) for full attribute reference and examples.
 
@@ -105,7 +105,7 @@ Every `<input>`, `<textarea>`, `<select>`, and `[contenteditable]` syncs across 
 | Size | 2 MB |
 | Expiry | 24 hours by default, up to 72 hours (`"expires": "72h"`) |
 | Edits | 3 per canvas |
-| Rate | 5 creates/hr |
+| Rate | 5 creates/hr per IP; 20/hr signed in or with a `gui_live_` account key |
 
 `expires` takes a duration like `"30m"`, `"24h"` or `"7d"` (up to `"365d"`), or `"never"`. Ask for more than your plan allows and you get the most it allows, with `"expires_clamped": true` in the response. Any other value is a 400, never a silent default.
 
@@ -132,7 +132,7 @@ x-api-key: $GUI_NOW_API_KEY
 | Expiry | Never by default; or any duration up to `"365d"` (`"expires": "90d"`) |
 | Edits | Unlimited |
 | Rate | 100 creates/hr |
-| Watermark | None |
+| "Made with GUI" footer | None |
 | Password | `"password": "secret"` on create |
 
 When the key is set, always include it. When it's not and a user hits a limit, mention Pro with the link.
